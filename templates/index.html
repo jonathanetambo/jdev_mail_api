@@ -1,0 +1,55 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Professional Email API for Developers</h1>
+        <p>Integrate powerful email sending capabilities into your websites with our simple, secure, and scalable REST API.</p>
+        <div class="hero-buttons">
+            <a href="/register" class="btn-primary">Get Started Free</a>
+            <a href="/docs" class="btn-secondary">Read Documentation</a>
+        </div>
+    </div>
+    <div class="hero-terminal">
+        <div class="terminal-header">
+            <div class="terminal-dot red"></div>
+            <div class="terminal-dot yellow"></div>
+            <div class="terminal-dot green"></div>
+        </div>
+        <div class="terminal-content">
+            curl -X POST https://api.jdevmail.com/send-email \<br>
+            &nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+            &nbsp;&nbsp;-d '{<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"site_id": "your_site_id",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"public_key": "your_public_key",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"secret_key": "your_secret_key",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"to": "user@example.com",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"subject": "Welcome!",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"html_content": "&lt;h1&gt;Welcome&lt;/h1&gt;"<br>
+            &nbsp;&nbsp;}'<br>
+            <span style="color: #22c55e;">→ {"success": true, "log_id": 123}</span>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="features-container">
+        <h2>Built for modern developers</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🔒 Enterprise Security</h3>
+                <p>Encrypted logs, rate limiting, and spam protection built-in.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Detailed Analytics</h3>
+                <p>Track every email with real-time statistics and encrypted logs.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ High Performance</h3>
+                <p>Handle thousands of emails with our optimized infrastructure.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,62 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JDev Mail API - Professional Email API Service</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/"><i class="fas fa-envelope"></i> JDev Mail</a>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="/features" class="nav-link"><i class="fas fa-star"></i> Features</a>
+                <a href="/pricing" class="nav-link"><i class="fas fa-tag"></i> Pricing</a>
+                <a href="/docs" class="nav-link"><i class="fas fa-book"></i> Documentation</a>
+                
+                <!-- Ces liens seront contrôlés par JavaScript -->
+                <div id="authLinks">
+                    <a href="/login" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="/register" class="btn-primary-small"><i class="fas fa-user-plus"></i> Sign Up</a>
+                </div>
+            </div>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider">
+                        <i class="fas fa-sun"></i>
+                        <i class="fas fa-moon"></i>
+                    </div>
+                </label>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <div id="notification-container"></div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

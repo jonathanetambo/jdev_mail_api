@@ -1,0 +1,112 @@
+<!-- templates/pricing.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="pricing-page">
+    <section class="pricing-hero">
+        <div class="container">
+            <h1>Simple, transparent pricing</h1>
+            <p>Choose the plan that fits your needs. No hidden fees.</p>
+        </div>
+    </section>
+
+    <section class="pricing-grid-section">
+        <div class="container">
+            <div class="pricing-grid">
+                <!-- Free Tier -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Free</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">0</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <p>Perfect for testing and small projects</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✓ 1,000 emails/month</li>
+                        <li>✓ 2 sites included</li>
+                        <li>✓ Basic analytics</li>
+                        <li>✓ 7 days log retention</li>
+                        <li>✓ Community support</li>
+                    </ul>
+                    <a href="/register" class="btn-secondary">Get Started</a>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="pricing-card popular">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="pricing-header">
+                        <h3>Pro</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">29</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <p>For growing businesses</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✓ 50,000 emails/month</li>
+                        <li>✓ Unlimited sites</li>
+                        <li>✓ Advanced analytics</li>
+                        <li>✓ 30 days log retention</li>
+                        <li>✓ Priority support</li>
+                        <li>✓ API webhooks</li>
+                        <li>✓ Custom domains</li>
+                    </ul>
+                    <a href="/register?plan=pro" class="btn-primary">Start Free Trial</a>
+                </div>
+
+                <!-- Enterprise Tier -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Enterprise</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">99</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <p>For large-scale operations</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✓ 500,000+ emails/month</li>
+                        <li>✓ Unlimited sites</li>
+                        <li>✓ Real-time analytics</li>
+                        <li>✓ 1 year log retention</li>
+                        <li>✓ 24/7 phone support</li>
+                        <li>✓ SLA guarantee</li>
+                        <li>✓ Dedicated account manager</li>
+                    </ul>
+                    <a href="/contact-sales" class="btn-secondary">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2>Frequently asked questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h4>Can I upgrade or downgrade anytime?</h4>
+                    <p>Yes, you can change your plan at any time. The changes will be reflected in your next billing cycle.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What payment methods do you accept?</h4>
+                    <p>We accept all major credit cards, PayPal, and bank transfers for Enterprise plans.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Is there a free trial?</h4>
+                    <p>Yes, all paid plans come with a 14-day free trial. No credit card required.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What happens if I exceed my limit?</h4>
+                    <p>You'll be notified and can upgrade your plan or pay for overages at $0.001 per email.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

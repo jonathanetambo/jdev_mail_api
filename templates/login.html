@@ -1,0 +1,177 @@
+<!-- templates/login.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Welcome back</h1>
+                <p>Sign in to your account</p>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username or email</label>
+                    <input type="text" id="username" name="username" required 
+                           placeholder="johndoe or john@example.com" autocomplete="username">
+                    <span class="error-message" id="usernameError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" name="password" required 
+                               placeholder="Enter your password" autocomplete="current-password">
+                        <button type="button" class="toggle-password" data-target="password">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
+                    <span class="error-message" id="passwordError"></span>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="/forgot-password" class="forgot-link">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-primary btn-full">Sign in</button>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="/register">Create one</a></p>
+                </div>
+            </form>
+
+            <div class="auth-divider">
+                <span>Or continue with</span>
+            </div>
+
+            <div class="social-auth">
+                <button class="btn-social" onclick="socialLogin('github')">
+                    <span>GitHub</span>
+                </button>
+                <button class="btn-social" onclick="socialLogin('google')">
+                    <span>Google</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Check for redirect message
+const urlParams = new URLSearchParams(window.location.search);
+const registered = urlParams.get('registered');
+if (registered === 'true') {
+    showNotification('Account created successfully! Please sign in.', 'success');
+}
+
+// Toggle password visibility
+document.querySelectorAll('.toggle-password').forEach(button => {
+    button.addEventListener('click', function() {
+        const target = document.getElementById(this.dataset.target);
+        const type = target.getAttribute('type') === 'password' ? 'text' : 'password';
+        target.setAttribute('type', type);
+        this.querySelector('.eye-icon').textContent = type === 'password' ? '👁️' : '🙈';
+    });
+});
+
+// Form submission
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Clear previous errors
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const remember = document.getElementById('remember').checked;
+    
+    // Validation
+    if (!username || !password) {
+        if (!username) document.getElementById('usernameError').textContent = 'Username or email is required';
+        if (!password) document.getElementById('passwordError').textContent = 'Password is required';
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Signing in...';
+    submitBtn.disabled = true;
+    
+    try {
+        const response = await fetch('/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Store tokens
+            localStorage.setItem('access_token', data.access_token);
+            localStorage.setItem('refresh_token', data.refresh_token);
+            localStorage.setItem('user_data', JSON.stringify(data.user));
+            
+            showNotification('Login successful! Redirecting...', 'success');
+            
+            // Redirect to dashboard
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 1500);
+        } else {
+            showNotification(data.error || 'Login failed', 'error');
+            if (data.error.includes('credentials')) {
+                document.getElementById('passwordError').textContent = 'Invalid username or password';
+            } else if (data.error.includes('locked')) {
+                document.getElementById('usernameError').textContent = data.error;
+            }
+        }
+    } catch (error) {
+        showNotification('Network error. Please try again.', 'error');
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
+
+function socialLogin(provider) {
+    showNotification(`${provider} login coming soon!`, 'info');
+}
+
+// Auto-fill demo credentials for testing
+function fillDemoCredentials() {
+    document.getElementById('username').value = 'demo@jdevmail.com';
+    document.getElementById('password').value = 'demo123456';
+}
+</script>
+
+<!-- templates/login.html - Assurez-vous que le token est stocké -->
+<script>
+// Dans votre script login, après une connexion réussie
+if (response.ok) {
+    const data = await response.json();
+    localStorage.setItem('access_token', data.access_token);
+    localStorage.setItem('refresh_token', data.refresh_token);
+    localStorage.setItem('user_data', JSON.stringify(data.user));
+    
+    // Mettre à jour les liens d'authentification
+    if (window.updateAuthLinks) {
+        window.updateAuthLinks();
+    }
+    
+    showNotification('Login successful! Redirecting...', 'success');
+    
+    setTimeout(() => {
+        window.location.href = '/dashboard';
+    }, 1500);
+}
+</script>
+{% endblock %}

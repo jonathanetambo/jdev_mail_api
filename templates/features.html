@@ -1,0 +1,98 @@
+<!-- templates/features.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="features-page">
+    <!-- Hero Section -->
+    <section class="features-hero">
+        <div class="container">
+            <h1>Everything you need for <span class="gradient-text">professional email delivery</span></h1>
+            <p>Powerful features that make JDev Mail the choice of developers worldwide</p>
+        </div>
+    </section>
+
+    <!-- Main Features Grid -->
+    <section class="features-grid-section">
+        <div class="container">
+            <div class="features-grid-2">
+                <div class="feature-card-large">
+                    <div class="feature-icon">🚀</div>
+                    <h3>High-Performance API</h3>
+                    <p>Sub-100ms response times with automatic retries and queue management for guaranteed delivery.</p>
+                    <ul class="feature-list">
+                        <li>✓ 99.9% uptime SLA</li>
+                        <li>✓ Automatic retry logic</li>
+                        <li>✓ Rate limiting protection</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card-large">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-level encryption for all logs and communications with automatic key rotation.</p>
+                    <ul class="feature-list">
+                        <li>✓ Fernet encryption</li>
+                        <li>✓ Encrypted log files (.jdev)</li>
+                        <li>✓ GDPR compliant</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card-large">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-time Analytics</h3>
+                    <p>Track every email with detailed statistics and delivery insights.</p>
+                    <ul class="feature-list">
+                        <li>✓ Delivery rates dashboard</li>
+                        <li>✓ Open & click tracking</li>
+                        <li>✓ Custom webhooks</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card-large">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Developer Tools</h3>
+                    <p>Full-featured API with client libraries for all major programming languages.</p>
+                    <ul class="feature-list">
+                        <li>✓ Python SDK available</li>
+                        <li>✓ JavaScript/Node.js ready</li>
+                        <li>✓ RESTful API design</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Section -->
+    <section class="security-section">
+        <div class="container">
+            <h2>Built with security at its core</h2>
+            <div class="security-grid">
+                <div class="security-item">
+                    <div class="security-icon">🔐</div>
+                    <h4>End-to-end encryption</h4>
+                    <p>All logs are encrypted before storage</p>
+                </div>
+                <div class="security-item">
+                    <div class="security-icon">🛡️</div>
+                    <h4>DDoS Protection</h4>
+                    <p>Automatic rate limiting and IP blocking</p>
+                </div>
+                <div class="security-item">
+                    <div class="security-icon">📝</div>
+                    <h4>Audit Logs</h4>
+                    <p>Complete history of all API requests</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to start sending emails?</h2>
+            <p>Join thousands of developers who trust JDev Mail</p>
+            <a href="/register" class="btn-primary">Get Started Free</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

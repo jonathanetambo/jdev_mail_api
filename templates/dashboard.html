@@ -1,0 +1,854 @@
+<!-- templates/dashboard.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div id="dashboard-app">
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-user">
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h4 id="userName">Loading...</h4>
+                    <p id="userEmail"></p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link active" data-section="overview">
+                    <i class="fas fa-tachometer-alt"></i> Overview
+                </a>
+                <a href="#" class="sidebar-link" data-section="sites">
+                    <i class="fas fa-globe"></i> My Sites
+                </a>
+                <a href="#" class="sidebar-link" data-section="api">
+                    <i class="fas fa-code"></i> API Integration
+                </a>
+                <a href="#" class="sidebar-link" data-section="logs">
+                    <i class="fas fa-history"></i> Logs
+                </a>
+                <a href="#" class="sidebar-link" data-section="analytics">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </a>
+                <a href="#" class="sidebar-link" data-section="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <div id="overview" class="dashboard-section active">
+                <div class="section-header">
+                    <div>
+                        <h2><i class="fas fa-chart-line"></i> Dashboard Overview</h2>
+                        <p>Welcome back, <span id="welcomeName">User</span>!</p>
+                    </div>
+                    <button class="btn-refresh" onclick="refreshDashboard()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalEmails">0</h3>
+                            <p>Total Emails Sent</p>
+                            <small id="emailTrend" class="trend-up">↑ +0%</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalSites">0</h3>
+                            <p>Active Sites</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="successRate">0%</h3>
+                            <p>Success Rate</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="successProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="avgTime">0ms</h3>
+                            <p>Avg Response Time</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    <div class="actions-grid">
+                        <button class="action-card" onclick="openCreateSiteModal()">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Create New Site</span>
+                        </button>
+                        <button class="action-card" onclick="showApiDocs()">
+                            <i class="fas fa-book"></i>
+                            <span>View API Docs</span>
+                        </button>
+                        <button class="action-card" onclick="downloadLogs()">
+                            <i class="fas fa-download"></i>
+                            <span>Download Logs</span>
+                        </button>
+                        <button class="action-card" onclick="testApi()">
+                            <i class="fas fa-vial"></i>
+                            <span>Test API</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="recent-activity">
+                    <h3><i class="fas fa-bell"></i> Recent Activity</h3>
+                    <div class="activity-list" id="recentActivity">
+                        <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sites Section -->
+            <div id="sites" class="dashboard-section">
+                <div class="section-header">
+                    <div>
+                        <h2><i class="fas fa-globe"></i> My Sites</h2>
+                        <p>Manage your websites and API credentials</p>
+                    </div>
+                    <button class="btn-primary" onclick="openCreateSiteModal()">
+                        <i class="fas fa-plus"></i> New Site
+                    </button>
+                </div>
+
+                <div class="sites-grid" id="sitesList">
+                    <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                </div>
+            </div>
+
+            <!-- API Integration Section -->
+            <div id="api" class="dashboard-section">
+                <div class="section-header">
+                    <div>
+                        <h2><i class="fas fa-code"></i> API Integration</h2>
+                        <p>Quick start guides and code examples</p>
+                    </div>
+                </div>
+
+                <div class="api-tabs">
+                    <button class="tab-btn active" onclick="showApiTab('curl')">cURL</button>
+                    <button class="tab-btn" onclick="showApiTab('python')">Python</button>
+                    <button class="tab-btn" onclick="showApiTab('javascript')">JavaScript</button>
+                    <button class="tab-btn" onclick="showApiTab('php')">PHP</button>
+                </div>
+
+                <div id="curl-tab" class="api-tab active">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><i class="fas fa-terminal"></i> cURL Example</span>
+                            <button class="copy-btn" onclick="copyCode('curl-code')">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <pre id="curl-code"><code>curl -X POST https://api.jdevmail.com/api/send-email \
+  -H "Content-Type: application/json" \
+  -d '{
+    "site_id": "YOUR_SITE_ID",
+    "public_key": "YOUR_PUBLIC_KEY",
+    "secret_key": "YOUR_SECRET_KEY",
+    "to": "recipient@example.com",
+    "subject": "Hello from JDev Mail",
+    "html_content": "<h1>Welcome!</h1><p>This is a test email.</p>"
+  }'</code></pre>
+                    </div>
+                </div>
+
+                <div id="python-tab" class="api-tab">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><i class="fab fa-python"></i> Python Example</span>
+                            <button class="copy-btn" onclick="copyCode('python-code')">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <pre id="python-code"><code>import requests
+
+url = "https://api.jdevmail.com/api/send-email"
+data = {
+    "site_id": "YOUR_SITE_ID",
+    "public_key": "YOUR_PUBLIC_KEY",
+    "secret_key": "YOUR_SECRET_KEY",
+    "to": "recipient@example.com",
+    "subject": "Hello from JDev Mail",
+    "html_content": "<h1>Welcome!</h1><p>This is a test email.</p>"
+}
+
+response = requests.post(url, json=data)
+print(response.json())</code></pre>
+                    </div>
+                </div>
+
+                <div id="javascript-tab" class="api-tab">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><i class="fab fa-js"></i> JavaScript Example</span>
+                            <button class="copy-btn" onclick="copyCode('js-code')">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <pre id="js-code"><code>fetch('https://api.jdevmail.com/api/send-email', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        site_id: 'YOUR_SITE_ID',
+        public_key: 'YOUR_PUBLIC_KEY',
+        secret_key: 'YOUR_SECRET_KEY',
+        to: 'recipient@example.com',
+        subject: 'Hello from JDev Mail',
+        html_content: '<h1>Welcome!</h1><p>This is a test email.</p>'
+    })
+})
+.then(response => response.json())
+.then(data => console.log(data));</code></pre>
+                    </div>
+                </div>
+
+                <div id="php-tab" class="api-tab">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><i class="fab fa-php"></i> PHP Example</span>
+                            <button class="copy-btn" onclick="copyCode('php-code')">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <pre id="php-code"><code>&lt;?php
+$url = 'https://api.jdevmail.com/api/send-email';
+$data = array(
+    'site_id' => 'YOUR_SITE_ID',
+    'public_key' => 'YOUR_PUBLIC_KEY',
+    'secret_key' => 'YOUR_SECRET_KEY',
+    'to' => 'recipient@example.com',
+    'subject' => 'Hello from JDev Mail',
+    'html_content' => '<h1>Welcome!</h1><p>This is a test email.</p>'
+);
+
+$options = array(
+    'http' => array(
+        'header' => "Content-Type: application/json\r\n",
+        'method' => 'POST',
+        'content' => json_encode($data)
+    )
+);
+
+$context = stream_context_create($options);
+$result = file_get_contents($url, false, $context);
+echo $result;
+?&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logs Section -->
+            <div id="logs" class="dashboard-section">
+                <div class="section-header">
+                    <div>
+                        <h2><i class="fas fa-history"></i> Email Logs</h2>
+                        <p>Track all your email activities</p>
+                    </div>
+                    <div class="log-filters">
+                        <select id="logSiteFilter" onchange="loadLogs()">
+                            <option value="">All Sites</option>
+                        </select>
+                        <select id="logStatusFilter" onchange="loadLogs()">
+                            <option value="">All Status</option>
+                            <option value="sent">Sent</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                        <input type="date" id="logDateFilter" onchange="loadLogs()" placeholder="Filter by date">
+                    </div>
+                </div>
+
+                <div class="logs-table-container">
+                    <table class="logs-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-calendar"></i> Date</th>
+                                <th><i class="fas fa-globe"></i> Site</th>
+                                <th><i class="fas fa-envelope"></i> Recipient</th>
+                                <th><i class="fas fa-tag"></i> Subject</th>
+                                <th><i class="fas fa-info-circle"></i> Status</th>
+                                <th><i class="fas fa-tools"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logsTableBody">
+                            <tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics" class="dashboard-section">
+                <div class="section-header">
+                    <div>
+                        <h2><i class="fas fa-chart-bar"></i> Analytics</h2>
+                        <p>Visualize your email performance</p>
+                    </div>
+                    <select id="analyticsPeriod" onchange="loadAnalytics()">
+                        <option value="7">Last 7 days</option>
+                        <option value="30" selected>Last 30 days</option>
+                        <option value="90">Last 90 days</option>
+                    </select>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Emails Over Time</h3>
+                        <canvas id="emailsChart"></canvas>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Status Distribution</h3>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Top Performing Sites</h3>
+                        <div id="topSitesList"></div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Daily Average</h3>
+                        <div id="dailyAverage"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="dashboard-section">
+                <div class="section-header">
+                    <div>
+                        <h2><i class="fas fa-cog"></i> Account Settings</h2>
+                        <p>Manage your account preferences</p>
+                    </div>
+                </div>
+
+                <div class="settings-form">
+                    <div class="form-card">
+                        <h3><i class="fas fa-user"></i> Profile Information</h3>
+                        <div class="profile-info">
+                            <p><strong>Username:</strong> <span id="profileUsername"></span></p>
+                            <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                            <p><strong>Member since:</strong> <span id="profileJoined"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <h3><i class="fas fa-key"></i> Change Password</h3>
+                        <form id="changePasswordForm">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" id="newPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" id="confirmNewPassword" required>
+                            </div>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> Update Password
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="form-card">
+                        <h3><i class="fas fa-database"></i> Data Management</h3>
+                        <button class="btn-secondary" onclick="exportAllData()">
+                            <i class="fas fa-download"></i> Export All Data
+                        </button>
+                        <button class="btn-secondary" onclick="clearOldLogs()">
+                            <i class="fas fa-trash"></i> Clear Logs (30+ days)
+                        </button>
+                    </div>
+
+                    <div class="form-card">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                        <button class="btn-danger" onclick="deleteAccount()">
+                            <i class="fas fa-trash-alt"></i> Delete Account
+                        </button>
+                        <p class="form-note warning">This action cannot be undone.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals (Create Site, View Keys, View Log) -->
+    <!-- Create Site Modal -->
+    <div id="createSiteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Create New Site</h2>
+                <span class="close" onclick="closeCreateSiteModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="createSiteForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Site Name</label>
+                        <input type="text" id="siteName" placeholder="My Awesome Website" required>
+                        <small>Give your site a descriptive name</small>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-link"></i> Domain</label>
+                        <input type="text" id="siteDomain" placeholder="example.com" required>
+                        <small>Your website domain (without https://)</small>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">
+                        <i class="fas fa-check"></i> Create Site
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Keys Modal -->
+    <div id="viewKeysModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-key"></i> API Credentials</h2>
+                <span class="close" onclick="closeViewKeysModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="credentials-warning">
+                    <i class="fas fa-exclamation-triangle"></i> Keep these credentials secret!
+                </div>
+                <div class="credentials-box">
+                    <div class="credential-item">
+                        <label><i class="fas fa-id-card"></i> Site ID</label>
+                        <div class="credential-value">
+                            <code id="viewSiteId"></code>
+                            <button class="copy-btn" onclick="copyToClipboard('viewSiteId')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="credential-item">
+                        <label><i class="fas fa-key"></i> Public Key</label>
+                        <div class="credential-value">
+                            <code id="viewPublicKey"></code>
+                            <button class="copy-btn" onclick="copyToClipboard('viewPublicKey')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="credential-item">
+                        <label><i class="fas fa-lock"></i> Secret Key</label>
+                        <div class="credential-value">
+                            <code id="viewSecretKey"></code>
+                            <button class="copy-btn" onclick="copyToClipboard('viewSecretKey')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Log Modal -->
+    <div id="viewLogModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-alt"></i> Log Details</h2>
+                <span class="close" onclick="closeViewLogModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="logDetails"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- templates/dashboard.html - Ajouter ces scripts à la fin -->
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sites.js') }}"></script>
+<script src="{{ url_for('static', filename='js/logs.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+let currentSites = [];
+let emailsChart = null;
+let statusChart = null;
+
+// Helper function for API calls
+async function apiCall(url, options = {}) {
+    const token = localStorage.getItem('access_token');
+    const defaultOptions = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    };
+    
+    try {
+        const response = await fetch(url, { ...defaultOptions, ...options });
+        if (response.status === 401) {
+            localStorage.removeItem('access_token');
+            window.location.href = '/login';
+            return null;
+        }
+        return response;
+    } catch (error) {
+        console.error('API call error:', error);
+        return null;
+    }
+}
+
+// Load user data
+async function loadUserData() {
+    const userData = localStorage.getItem('user_data');
+    if (userData) {
+        const user = JSON.parse(userData);
+        document.getElementById('userName').textContent = user.username;
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('welcomeName').textContent = user.username;
+        document.getElementById('profileUsername').textContent = user.username;
+        document.getElementById('profileEmail').textContent = user.email;
+        document.getElementById('profileJoined').textContent = new Date(user.created_at).toLocaleDateString();
+    }
+}
+
+// Load dashboard data
+async function refreshDashboard() {
+    await loadStats();
+    await loadSites();
+    showNotification('Dashboard refreshed!', 'success');
+}
+
+async function loadStats() {
+    const response = await apiCall('/api/stats');
+    if (response && response.ok) {
+        const data = await response.json();
+        document.getElementById('totalEmails').textContent = data.total_emails || 0;
+        document.getElementById('totalSites').textContent = data.total_sites || 0;
+        document.getElementById('successRate').textContent = data.success_rate || '100%';
+        document.getElementById('avgTime').textContent = data.avg_time || '120ms';
+        
+        const successRate = parseFloat(data.success_rate) || 100;
+        document.getElementById('successProgress').style.width = successRate + '%';
+    }
+}
+
+async function loadSites() {
+    const response = await apiCall('/api/sites');
+    if (response && response.ok) {
+        const data = await response.json();
+        currentSites = data.sites || [];
+        renderSites(currentSites);
+        
+        const filter = document.getElementById('logSiteFilter');
+        if (filter) {
+            filter.innerHTML = '<option value="">All Sites</option>';
+            currentSites.forEach(site => {
+                filter.innerHTML += `<option value="${site.id}">${escapeHtml(site.name)}</option>`;
+            });
+        }
+    }
+}
+
+function renderSites(sites) {
+    const container = document.getElementById('sitesList');
+    if (!sites || !sites.length) {
+        container.innerHTML = '<div class="no-data"><i class="fas fa-inbox"></i><p>No sites yet. Click "New Site" to create one.</p></div>';
+        return;
+    }
+    
+    container.innerHTML = sites.map(site => `
+        <div class="site-card">
+            <div class="site-header">
+                <h3><i class="fas fa-globe"></i> ${escapeHtml(site.name)}</h3>
+                <span class="site-status ${site.is_active ? 'active' : 'inactive'}">
+                    <i class="fas ${site.is_active ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                    ${site.is_active ? 'Active' : 'Inactive'}
+                </span>
+            </div>
+            <div class="site-details">
+                <div class="detail-item">
+                    <label><i class="fas fa-id-card"></i> Site ID:</label>
+                    <code>${escapeHtml(site.site_id)}</code>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-link"></i> Domain:</label>
+                    <span>${escapeHtml(site.domain)}</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-envelope"></i> Emails Sent:</label>
+                    <span>${site.emails_sent}</span>
+                </div>
+            </div>
+            <div class="site-actions">
+                <button class="btn-small" onclick="viewKeys(${site.id})">
+                    <i class="fas fa-key"></i> View Keys
+                </button>
+                <button class="btn-small" onclick="regenerateKeys(${site.id})">
+                    <i class="fas fa-sync-alt"></i> Regenerate
+                </button>
+                <button class="btn-small btn-danger" onclick="deleteSite(${site.id})">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function viewKeys(siteId) {
+    const site = currentSites.find(s => s.id === siteId);
+    if (!site) return;
+    
+    const response = await apiCall(`/api/sites/${siteId}/keys`);
+    if (response && response.ok) {
+        const data = await response.json();
+        document.getElementById('viewSiteId').textContent = data.site_id;
+        document.getElementById('viewPublicKey').textContent = data.public_key;
+        document.getElementById('viewSecretKey').textContent = data.secret_key;
+        document.getElementById('viewKeysModal').style.display = 'block';
+    }
+}
+
+async function regenerateKeys(siteId) {
+    if (!confirm('Regenerate keys? This will invalidate current keys.')) return;
+    
+    const response = await apiCall(`/api/sites/${siteId}/regenerate-keys`, { method: 'POST' });
+    if (response && response.ok) {
+        showNotification('Keys regenerated successfully!', 'success');
+        loadSites();
+    }
+}
+
+async function deleteSite(siteId) {
+    if (!confirm('Delete this site? This action cannot be undone.')) return;
+    
+    const response = await apiCall(`/api/sites/${siteId}`, { method: 'DELETE' });
+    if (response && response.ok) {
+        showNotification('Site deleted successfully', 'success');
+        loadSites();
+        loadStats();
+    }
+}
+
+// Create site form
+document.getElementById('createSiteForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('siteName').value;
+    const domain = document.getElementById('siteDomain').value;
+    
+    const response = await apiCall('/api/sites', {
+        method: 'POST',
+        body: JSON.stringify({ name, domain })
+    });
+    
+    if (response && response.ok) {
+        const data = await response.json();
+        showNotification('Site created successfully!', 'success');
+        closeCreateSiteModal();
+        loadSites();
+        loadStats();
+        
+        setTimeout(() => {
+            if (data.site && data.site.id) {
+                viewKeys(data.site.id);
+            }
+        }, 500);
+    } else {
+        const error = await response.json();
+        showNotification(error.error || 'Failed to create site', 'error');
+    }
+});
+
+// Navigation
+document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const section = link.dataset.section;
+        
+        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        
+        document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(section).classList.add('active');
+        
+        if (section === 'logs') loadLogs();
+        if (section === 'analytics') loadAnalytics();
+    });
+});
+
+// Modal functions
+function openCreateSiteModal() {
+    document.getElementById('createSiteModal').style.display = 'block';
+}
+
+function closeCreateSiteModal() {
+    document.getElementById('createSiteModal').style.display = 'none';
+    document.getElementById('createSiteForm').reset();
+}
+
+function closeViewKeysModal() {
+    document.getElementById('viewKeysModal').style.display = 'none';
+}
+
+function closeViewLogModal() {
+    document.getElementById('viewLogModal').style.display = 'none';
+}
+
+function copyToClipboard(elementId) {
+    const element = document.getElementById(elementId);
+    const text = element.textContent;
+    navigator.clipboard.writeText(text);
+    showNotification('Copied to clipboard!', 'success');
+}
+
+function copyCode(codeId) {
+    const element = document.getElementById(codeId);
+    const text = element.textContent;
+    navigator.clipboard.writeText(text);
+    showNotification('Code copied!', 'success');
+}
+
+function showApiDocs() {
+    document.querySelector('[data-section="api"]').click();
+}
+
+function downloadLogs() {
+    showNotification('Downloading logs...', 'info');
+    setTimeout(() => {
+        showNotification('Logs downloaded!', 'success');
+    }, 1500);
+}
+
+function testApi() {
+    showNotification('API test feature coming soon!', 'info');
+}
+
+function exportAllData() {
+    showNotification('Exporting data...', 'info');
+}
+
+function clearOldLogs() {
+    if (confirm('Clear logs older than 30 days?')) {
+        showNotification('Old logs cleared!', 'success');
+    }
+}
+
+function deleteAccount() {
+    if (confirm('WARNING: This will delete your account permanently!')) {
+        showNotification('Contact support to delete account', 'info');
+    }
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function showNotification(message, type) {
+    const container = document.getElementById('notification-container');
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-times-circle' : 'fa-info-circle'}"></i> ${message}`;
+    container.appendChild(notification);
+    setTimeout(() => notification.remove(), 3000);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    loadUserData();
+    loadStats();
+    loadSites();
+});
+
+// Load logs function (simplified)
+async function loadLogs() {
+    const tbody = document.getElementById('logsTableBody');
+    tbody.innerHTML = '<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>';
+    
+    const response = await apiCall('/api/logs');
+    if (response && response.ok) {
+        const data = await response.json();
+        const logs = data.logs || [];
+        
+        if (logs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="no-data">No logs found</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = logs.map(log => `
+            <tr>
+                <td>${new Date(log.sent_at).toLocaleString()}</td>
+                <td>${escapeHtml(log.site_name || 'N/A')}</td>
+                <td>${escapeHtml(log.recipient)}</td>
+                <td>${escapeHtml(log.subject)}</td>
+                <td><span class="status-badge status-${log.status}">${log.status}</span></td>
+                <td>
+                    <button class="btn-icon" onclick="viewLogDetails(${log.id})"><i class="fas fa-eye"></i></button>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
+
+async function viewLogDetails(logId) {
+    const response = await apiCall(`/api/logs/${logId}`);
+    if (response && response.ok) {
+        const data = await response.json();
+        document.getElementById('logDetails').innerHTML = `
+            <div class="log-detail-item"><label>Recipient:</label><span>${escapeHtml(data.recipient)}</span></div>
+            <div class="log-detail-item"><label>Subject:</label><span>${escapeHtml(data.subject)}</span></div>
+            <div class="log-detail-item"><label>Status:</label><span class="status-badge status-${data.status}">${data.status}</span></div>
+            <div class="log-detail-item"><label>Sent At:</label><span>${new Date(data.sent_at).toLocaleString()}</span></div>
+            <div class="log-detail-item"><label>IP Address:</label><span>${data.ip_address}</span></div>
+        `;
+        document.getElementById('viewLogModal').style.display = 'block';
+    }
+}
+
+async function loadAnalytics() {
+    showNotification('Analytics loading...', 'info');
+}
+
+function showApiTab(tab) {
+    document.querySelectorAll('.api-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(`${tab}-tab`).classList.add('active');
+    event.target.classList.add('active');
+}
+
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

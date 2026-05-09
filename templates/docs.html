@@ -1,0 +1,190 @@
+<!-- templates/docs.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="docs-page">
+    <div class="docs-container">
+        <!-- Sidebar -->
+        <aside class="docs-sidebar">
+            <nav class="docs-nav">
+                <div class="docs-nav-group">
+                    <h4>Getting Started</h4>
+                    <a href="#introduction" class="docs-nav-link">Introduction</a>
+                    <a href="#authentication" class="docs-nav-link">Authentication</a>
+                    <a href="#quick-start" class="docs-nav-link">Quick Start</a>
+                </div>
+                <div class="docs-nav-group">
+                    <h4>API Reference</h4>
+                    <a href="#send-email" class="docs-nav-link">Send Email</a>
+                    <a href="#get-stats" class="docs-nav-link">Get Statistics</a>
+                    <a href="#manage-sites" class="docs-nav-link">Manage Sites</a>
+                </div>
+                <div class="docs-nav-group">
+                    <h4>Guides</h4>
+                    <a href="#python" class="docs-nav-link">Python Integration</a>
+                    <a href="#javascript" class="docs-nav-link">JavaScript/Node.js</a>
+                    <a href="#security" class="docs-nav-link">Security Best Practices</a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="docs-content">
+            <section id="introduction">
+                <h1>Introduction</h1>
+                <p>JDev Mail API provides a simple, RESTful interface for sending professional emails from your applications.</p>
+                
+                <div class="docs-code-block">
+                    <div class="code-header">
+                        <span>Base URL</span>
+                        <button class="copy-btn" onclick="copyToClipboard('https://api.jdevmail.com')">Copy</button>
+                    </div>
+                    <pre><code>https://api.jdevmail.com</code></pre>
+                </div>
+            </section>
+
+            <section id="authentication">
+                <h2>Authentication</h2>
+                <p>All API requests require authentication using your site credentials.</p>
+                
+                <div class="docs-code-block">
+                    <div class="code-header">
+                        <span>Authentication Headers</span>
+                        <button class="copy-btn" onclick="copyToClipboard('Authorization: Bearer YOUR_JWT_TOKEN')">Copy</button>
+                    </div>
+                    <pre><code>{
+  "site_id": "your_site_id",
+  "public_key": "your_public_key",
+  "secret_key": "your_secret_key"
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="send-email">
+                <h2>Send Email</h2>
+                <p>Send an email through the API.</p>
+                
+                <div class="docs-endpoint">
+                    <span class="method post">POST</span>
+                    <code>/api/send-email</code>
+                </div>
+
+                <h3>Request Body</h3>
+                <div class="docs-code-block">
+                    <pre><code>{
+  "site_id": "string (required)",
+  "public_key": "string (required)",
+  "secret_key": "string (required)",
+  "to": "string (required, email)",
+  "subject": "string (required)",
+  "html_content": "string (required)",
+  "text_content": "string (optional)"
+}</code></pre>
+                </div>
+
+                <h3>Example Request</h3>
+                <div class="docs-code-block">
+                    <div class="code-header">
+                        <span>cURL</span>
+                        <button class="copy-btn" onclick="copyToClipboard(`curl -X POST https://api.jdevmail.com/api/send-email \\
+  -H 'Content-Type: application/json' \\
+  -d '{
+    \"site_id\": \"your_site_id\",
+    \"public_key\": \"your_public_key\",
+    \"secret_key\": \"your_secret_key\",
+    \"to\": \"user@example.com\",
+    \"subject\": \"Welcome to JDev Mail\",
+    \"html_content\": \"<h1>Welcome!</h1>\"
+  }'`)">Copy</button>
+                    </div>
+                    <pre><code>curl -X POST https://api.jdevmail.com/api/send-email \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "site_id": "your_site_id",
+    "public_key": "your_public_key",
+    "secret_key": "your_secret_key",
+    "to": "user@example.com",
+    "subject": "Welcome to JDev Mail",
+    "html_content": "<h1>Welcome!</h1>"
+  }'</code></pre>
+                </div>
+
+                <h3>Response</h3>
+                <div class="docs-code-block">
+                    <pre><code>{
+  "success": true,
+  "message": "Email sent successfully",
+  "log_id": 123
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="python">
+                <h2>Python Integration</h2>
+                <p>Example using Python with requests library.</p>
+                
+                <div class="docs-code-block">
+                    <div class="code-header">
+                        <span>Python</span>
+                        <button class="copy-btn" onclick="copyToClipboard(`import requests
+
+url = 'https://api.jdevmail.com/api/send-email'
+data = {
+    'site_id': 'your_site_id',
+    'public_key': 'your_public_key',
+    'secret_key': 'your_secret_key',
+    'to': 'user@example.com',
+    'subject': 'Test Email',
+    'html_content': '<h1>Hello World</h1>'
+}
+
+response = requests.post(url, json=data)
+print(response.json())`)">Copy</button>
+                    </div>
+                    <pre><code>import requests
+
+url = 'https://api.jdevmail.com/api/send-email'
+data = {
+    'site_id': 'your_site_id',
+    'public_key': 'your_public_key',
+    'secret_key': 'your_secret_key',
+    'to': 'user@example.com',
+    'subject': 'Test Email',
+    'html_content': '<h1>Hello World</h1>'
+}
+
+response = requests.post(url, json=data)
+print(response.json())</code></pre>
+                </div>
+            </section>
+
+            <section id="error-codes">
+                <h2>Error Codes</h2>
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>400</td><td>Bad Request - Missing or invalid parameters</td></tr>
+                        <tr><td>401</td><td>Unauthorized - Invalid authentication credentials</td></tr>
+                        <tr><td>403</td><td>Forbidden - Rate limit exceeded or account locked</td></tr>
+                        <tr><td>404</td><td>Not Found - Resource not found</td></tr>
+                        <tr><td>429</td><td>Too Many Requests - Rate limit exceeded</td></tr>
+                        <tr><td>500</td><td>Internal Server Error</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</div>
+
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text);
+    showNotification('Copied to clipboard!', 'success');
+}
+</script>
+{% endblock %}

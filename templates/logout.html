@@ -1,0 +1,42 @@
+<!-- templates/logout.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="logout-page">
+    <div class="logout-container">
+        <div class="logout-card">
+            <div class="logout-icon">👋</div>
+            <h1>You've been logged out</h1>
+            <p>Thank you for using JDev Mail API</p>
+            
+            <div class="logout-actions">
+                <a href="/login" class="btn-primary">Login Again</a>
+                <a href="/" class="btn-secondary">Return to Home</a>
+            </div>
+            
+            <div class="logout-redirect">
+                <p>Redirecting to home page in <span id="countdown">5</span> seconds...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Clear JWT tokens from localStorage
+localStorage.removeItem('access_token');
+localStorage.removeItem('refresh_token');
+localStorage.removeItem('user_data');
+
+// Countdown redirect
+let seconds = 5;
+const countdownElement = document.getElementById('countdown');
+const interval = setInterval(() => {
+    seconds--;
+    countdownElement.textContent = seconds;
+    if (seconds <= 0) {
+        clearInterval(interval);
+        window.location.href = '/';
+    }
+}, 1000);
+</script>
+{% endblock %}
