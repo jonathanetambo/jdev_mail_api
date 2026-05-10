@@ -40,15 +40,28 @@ class Config:
     
     # Encryption
     ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY', '')
+    
+    # CORS Configuration
+    CORS_ORIGINS = [
+        'http://localhost',
+        'http://localhost:5000',
+        'http://localhost:5500',
+        'http://127.0.0.1',
+        'http://127.0.0.1:5000',
+        'https://dzoko243.pythonanywhere.com'
+    ]
 
 class DevelopmentConfig(Config):
     DEBUG = True
     TESTING = False
     SESSION_COOKIE_SECURE = False
+    ENV = 'development'
 
 class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
+    ENV = 'production'
+    SESSION_COOKIE_SECURE = True
 
 config = {
     'development': DevelopmentConfig,
